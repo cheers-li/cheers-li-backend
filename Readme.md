@@ -6,6 +6,13 @@
 supabase functions deploy send-session-notification 
 ```
 
+## Run Locally
+
+```bash
+supabase start
+supabase functions serve send-session-notification 
+```
+
 ## Test
 
 ```bash
