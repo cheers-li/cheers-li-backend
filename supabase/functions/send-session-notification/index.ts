@@ -43,13 +43,18 @@ serve(async (req) => {
     const content = await req.json();
     const userId = content.record.user_id;
     const friends = await getFriendsAndDevices(supabaseClient, userId);
+    const coordinates = content.record.location?.coordinates
 
-    console.log(friends);
+    let body = "📍 at a nice place."
+
+    if(coordinates) {
+        body = `📍 ${coordinates[0]}, ${coordinates[1]}`    
+    }
 
     const message = {
         notification: {
             title: content.record.name,
-            body: "📍 at a nice place.",
+            body
         },
         registration_ids: friends
             ?.map((friend: any) =>
