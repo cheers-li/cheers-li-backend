@@ -43,12 +43,16 @@ serve(async (req) => {
     const content = await req.json();
     const userId = content.record.user_id;
     const friends = await getFriendsAndDevices(supabaseClient, userId);
-    const coordinates = content.record.location?.coordinates
+    const coordinates = content.record.location?.coordinates;
+    const locationName = content.record.location_name;
 
     let body = "📍 at a nice place."
 
     if(coordinates) {
         body = `📍 ${coordinates[0]}, ${coordinates[1]}`    
+    }
+    if(locationName) {
+        body = `📍 ${locationName}`    
     }
 
     const message = {
