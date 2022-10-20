@@ -4,6 +4,8 @@
 
 ```bash
 supabase functions deploy send-session-notification 
+supabase functions deploy send-friend-request
+supabase functions deploy send-cheersli
 ```
 
 ## Run Locally
