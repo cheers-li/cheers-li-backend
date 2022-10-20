@@ -58,7 +58,14 @@ serve(async (req) => {
     const message = {
         notification: {
             title: content.record.name,
-            body
+            body,
+        },
+        android: {
+            notification: {
+                icon: "ic_notification",
+                "click-action": "session-intent",
+                "notification-priority": "high",
+            },
         },
         registration_ids: friends
             ?.map((friend: any) =>

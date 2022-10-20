@@ -22,6 +22,13 @@ serve(async (req) => {
             title: `${userName} sent you a message`,
             body: "Cheersli 🍻",
         },
+        android: {
+            notification: {
+                icon: "ic_notification",
+                "click-action": "session-intent",
+                "notification-priority": "high",
+            },
+        },
         registration_ids: deviceToken,
     };
 
