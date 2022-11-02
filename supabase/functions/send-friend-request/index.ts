@@ -30,7 +30,7 @@ serve(async (req) => {
         notification: {
             title: "New Friend Request",
             body: `${profile1.username} sent you a friend request`,
-            click_action: 'io.supabase.cheersli://messages'
+            click_action: "io.supabase.cheersli://messages",
         },
         registration_ids: profile2.devices?.map(
             (device: any) => device.device_token

@@ -60,13 +60,6 @@ serve(async (req) => {
             title: content.record.name,
             body,
         },
-        android: {
-            notification: {
-                icon: "ic_notification",
-                "click-action": "session-intent",
-                "notification-priority": "high",
-            },
-        },
         registration_ids: friends
             ?.map((friend: any) =>
                 friend.devices.map((device: any) => device.device_token)
