@@ -17,10 +17,21 @@ serve(async (req) => {
     const deviceToken = content.device_token;
     const userName = content.user.username;
 
+    if(!deviceToken || deviceToken.length === 0) {
+        console.warn("No device token presents.")
+    }
+
     const message = {
         notification: {
             title: `${userName} sent you a message`,
             body: "Cheersli 🍻",
+        },
+        android: {
+            notification: {
+                icon: "ic_notification",
+                "click-action": "session-intent",
+                "notification-priority": "high",
+            },
         },
         registration_ids: deviceToken,
     };
