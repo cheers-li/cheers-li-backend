@@ -1,0 +1,27 @@
+name: CD - Deploy Functions
+
+on:
+  push:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      PROJECT_ID: ckiipzxuiudfldnxkxss
+    steps:
+      - name: Setup repo
+        uses: actions/checkout@v3
+
+      - uses: supabase/setup-cli@v1
+      
+      - name: Deploy
+        run: |
+          supabase functions deploy send-session-notification 
+          supabase functions deploy send-friend-request
+          supabase functions deploy send-cheersli
+          supabase functions deploy delete-user
