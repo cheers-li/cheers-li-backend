@@ -7,6 +7,7 @@ supabase functions deploy send-session-notification
 supabase functions deploy send-friend-request
 supabase functions deploy send-cheersli
 supabase functions deploy delete-user
+supabase functions deploy send-reaction-notification
 ```
 
 ## Run Locally
