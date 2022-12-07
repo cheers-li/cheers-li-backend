@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.131.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@^1.33.2";
+import androidConfig from "../_shared/androidConfig.ts";
 
 const getProfile = async (supabaseClient: any, userId: string) => {
     const { data, error } = await supabaseClient
@@ -30,8 +31,9 @@ serve(async (req) => {
         notification: {
             title: "New Friend Request",
             body: `${profile1.username} sent you a friend request`,
-            click_action: "io.supabase.cheersli://messages",
+            icon: "ic_notification",
         },
+        android: androidConfig("io.supabase.cheersli://app/friends"),
         registration_ids: profile2.devices?.map(
             (device: any) => device.device_token
         ),
@@ -53,7 +55,7 @@ serve(async (req) => {
         body: JSON.stringify(message),
     });
     const payload = await response.json();
-    return new Response(JSON.stringify({payload, message}), {
+    return new Response(JSON.stringify({ payload, message }), {
         headers: { "Content-Type": "application/json" },
     });
 });

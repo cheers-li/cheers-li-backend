@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.131.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@^1.33.2";
+import androidConfig from "../_shared/androidConfig.ts";
 
 const getFriendsAndDevices = async (supabaseClient: any, userId: string) => {
     const { data, error } = await supabaseClient
@@ -46,20 +47,24 @@ serve(async (req) => {
     const coordinates = content.record.location?.coordinates;
     const locationName = content.record.location_name;
 
-    let body = "📍 at a nice place."
+    let body = "📍 at a nice place.";
 
-    if(coordinates) {
-        body = `📍 ${coordinates[0]}, ${coordinates[1]}`    
+    if (coordinates) {
+        body = `📍 ${coordinates[0]}, ${coordinates[1]}`;
     }
-    if(locationName) {
-        body = `📍 ${locationName}`    
+    if (locationName) {
+        body = `📍 ${locationName}`;
     }
 
     const message = {
         notification: {
             title: content.record.name,
             body,
+            icon: "ic_notification",
         },
+        android: androidConfig(
+            `io.supabase.cheersli://app/sessions/${content.record.id}`
+        ),
         registration_ids: friends
             ?.map((friend: any) =>
                 friend.devices.map((device: any) => device.device_token)
@@ -78,6 +83,10 @@ serve(async (req) => {
     });
 
     const payload = await response.json();
+
+    console.log("content", content);
+    console.log("message", message);
+    console.log("payload", payload);
 
     return new Response(JSON.stringify(message), {
         headers: { "Content-Type": "application/json" },

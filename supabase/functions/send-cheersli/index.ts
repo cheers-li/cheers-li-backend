@@ -1,11 +1,13 @@
 import { serve } from "https://deno.land/std@0.131.0/http/server.ts";
+import androidConfig from "../_shared/androidConfig.ts";
 
 const corsHeaders = {
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "POST",
     "Access-Control-Expose-Headers": "Content-Length, X-JSON",
-    "Access-Control-Allow-Headers": "apikey,X-Client-Info, Content-Type, Authorization, Accept, Accept-Language, X-Authorization",
+    "Access-Control-Allow-Headers":
+        "apikey,X-Client-Info, Content-Type, Authorization, Accept, Accept-Language, X-Authorization",
 };
 
 serve(async (req) => {
@@ -17,22 +19,17 @@ serve(async (req) => {
     const deviceToken = content.device_token;
     const userName = content.user.username;
 
-    if(!deviceToken || deviceToken.length === 0) {
-        console.warn("No device token presents.")
+    if (!deviceToken || deviceToken.length === 0) {
+        console.warn("No device token presents.");
     }
 
     const message = {
         notification: {
             title: `${userName} sent you a message`,
             body: "Cheersli 🍻",
+            icon: "ic_notification",
         },
-        android: {
-            notification: {
-                icon: "ic_notification",
-                "click-action": "session-intent",
-                "notification-priority": "high",
-            },
-        },
+        android: androidConfig("io.supabase.cheersli://app/sessions"),
         registration_ids: deviceToken,
     };
 
@@ -47,6 +44,8 @@ serve(async (req) => {
     });
 
     const payload = await response.json();
+    console.log("payload", payload);
+    console.log("content", content);
 
     return new Response(JSON.stringify(message), {
         headers: corsHeaders,

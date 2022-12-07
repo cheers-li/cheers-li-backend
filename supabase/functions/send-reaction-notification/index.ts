@@ -1,10 +1,13 @@
 import { serve } from "https://deno.land/std@0.131.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@^1.33.2";
+import androidConfig from "../_shared/androidConfig.ts";
 
 const getSession = async (supabaseClient: any, sessionId: string) => {
     const { data, error } = await supabaseClient
         .from("sessions")
-        .select("id, name, created_at, ended_at, location, location_name, session_tag, user:user_id (id, username, avatarUrl:avatar_url, devices(id, device_token))")
+        .select(
+            "id, name, created_at, ended_at, location, location_name, session_tag, user:user_id (id, username, avatarUrl:avatar_url, devices(id, device_token))"
+        )
         .eq("id", sessionId)
         .single();
 
@@ -37,15 +40,18 @@ serve(async (req) => {
 
     const content = await req.json();
 
-    const session = await getSession(supabaseClient, content.record.session_id)
+    const session = await getSession(supabaseClient, content.record.session_id);
     const profile = await getProfile(supabaseClient, content.record.profile_id);
 
     const message = {
         notification: {
             title: "New Reaction",
             body: `${profile.username} reacted to your session`,
-            click_action: "io.supabase.cheersli://messages",
+            icon: "ic_notification",
         },
+        android: androidConfig(
+            `io.supabase.cheersli://app/sessions/${content.record.session_id}`
+        ),
         registration_ids: session.user.devices?.map(
             (device: any) => device.device_token
         ),
@@ -67,7 +73,7 @@ serve(async (req) => {
         body: JSON.stringify(message),
     });
     const payload = await response.json();
-    return new Response(JSON.stringify({payload, message}), {
+    return new Response(JSON.stringify({ payload, message }), {
         headers: { "Content-Type": "application/json" },
     });
 });
